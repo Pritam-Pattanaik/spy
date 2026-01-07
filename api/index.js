@@ -206,8 +206,8 @@ app.post('/api/pump-applications', async (req, res) => {
 
         res.status(201).json({ id: application.id, message: 'Pump application submitted successfully' })
     } catch (error) {
-        console.error('Pump application submission error:', error)
-        res.status(500).json({ error: 'Failed to submit pump application' })
+        console.error('Pump application submission error:', error.message, error.code, error.meta)
+        res.status(500).json({ error: 'Failed to submit pump application', details: error.message })
     }
 })
 
