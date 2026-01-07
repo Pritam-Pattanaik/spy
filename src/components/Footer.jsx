@@ -67,13 +67,13 @@ function Footer() {
                             </li>
                             <li className="flex items-center gap-3">
                                 <Phone className="w-5 h-5 text-saffron-400 flex-shrink-0" />
-                                <a href="tel:+917365821070" className="text-gray-300 hover:text-white transition-colors text-sm">
+                                <a href="tel:+918736098253" className="text-gray-300 hover:text-white transition-colors text-sm">
                                     {t('contact.phone.content')}
                                 </a>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Mail className="w-5 h-5 text-saffron-400 flex-shrink-0" />
-                                <a href="mailto:info@submersiblepumpyojana.com" className="text-gray-300 hover:text-white transition-colors text-sm">
+                                <a href="mailto:pmkusum494@gmail.com" className="text-gray-300 hover:text-white transition-colors text-sm">
                                     {t('contact.email.content')}
                                 </a>
                             </li>

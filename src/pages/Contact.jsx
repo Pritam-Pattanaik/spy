@@ -15,14 +15,14 @@ function Contact() {
             icon: Phone,
             title: t('contact.phone.title'),
             content: t('contact.phone.content'),
-            link: 'tel:+917365821070',
+            link: 'tel:+918736098253',
             color: 'blue'
         },
         {
             icon: Mail,
             title: t('contact.email.title'),
             content: t('contact.email.content'),
-            link: 'mailto:info@submersiblepumpyojana.com',
+            link: 'mailto:pmkusum494@gmail.com',
             color: 'green'
         },
         {
@@ -113,14 +113,14 @@ function Contact() {
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <a
-                            href="tel:+917365821070"
+                            href="tel:+918736098253"
                             className="inline-flex items-center gap-2 bg-white text-govt-green px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors"
                         >
                             <Phone className="w-5 h-5" />
                             Call Now
                         </a>
                         <a
-                            href="https://wa.me/917365821070"
+                            href="https://wa.me/918736098253"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 bg-green-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-green-700 transition-colors"
