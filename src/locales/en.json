@@ -1,0 +1,199 @@
+{
+    "nav": {
+        "home": "Home",
+        "about": "About Scheme",
+        "eligibility": "Eligibility",
+        "apply": "Apply Online",
+        "contact": "Contact"
+    },
+    "header": {
+        "title": "Submersible Pump Yojana",
+        "subtitle": "Pradhan Mantri Kusum Yojana"
+    },
+    "marquee": {
+        "text": "📢 Applications open for 2025 | Get up to 90% Subsidy on Solar Pumps | Apply Now! | Toll Free: 7365821070 📢"
+    },
+    "hero": {
+        "title": "Pradhan Mantri Kusum Yojana",
+        "subtitle": "Solar Power for Every Farm",
+        "description": "Empowering farmers with clean energy. Get 90% government subsidy on solar pumps and enjoy 24-hour electricity for irrigation.",
+        "cta": "Apply Now",
+        "learnMore": "Learn More"
+    },
+    "highlights": {
+        "title": "Key Benefits of the Scheme",
+        "subtitle": "Why farmers are choosing solar pumps under Kusum Yojana",
+        "subsidy": {
+            "title": "90% Subsidy",
+            "description": "Government pays 90% of the total cost. Farmers pay only 10% upfront."
+        },
+        "electricity": {
+            "title": "24-Hour Power",
+            "description": "Uninterrupted electricity supply for irrigation without dependency on grid."
+        },
+        "income": {
+            "title": "Extra Income",
+            "description": "Sell surplus electricity to power companies and earn additional income."
+        },
+        "eco": {
+            "title": "Eco-Friendly",
+            "description": "Reduce diesel and petrol usage. Contribute to a greener environment."
+        }
+    },
+    "stats": {
+        "title": "Scheme Impact",
+        "pumps": "Solar Pumps Installed",
+        "farmers": "Happy Farmers",
+        "subsidy": "Crore Subsidy Disbursed",
+        "states": "States Covered"
+    },
+    "about": {
+        "title": "About Submersible Pump Yojana",
+        "intro": "The PM Kusum (Pradhan Mantri Kisan Urja Suraksha evam Utthaan Mahabhiyaan) Yojana is a government initiative to help farmers access reliable and affordable solar power for agricultural purposes.",
+        "objective": {
+            "title": "Objective of the Scheme",
+            "content": "The scheme aims to provide 24-hour power supply in villages by generating electricity on farmers' land. With this initiative, farmers can reduce their dependence on diesel and kerosene oil, leading to significant cost savings and environmental benefits."
+        },
+        "benefits": {
+            "title": "Benefits of Solar Pump",
+            "item1": "Pay only 10% upfront - Government subsidizes 90%",
+            "item2": "Direct subsidy transfer to farmer's bank account",
+            "item3": "Utilize barren land for solar power generation",
+            "item4": "Reduce electricity bills to zero",
+            "item5": "Earn by selling excess power to grid"
+        },
+        "components": {
+            "title": "Components of Kusum Yojana",
+            "a": "Component A: Setting up 10,000 MW decentralized ground/stilt mounted grid-connected solar power plants",
+            "b": "Component B: Installation of 20 lakh standalone solar agricultural pumps",
+            "c": "Component C: Solarisation of 15 lakh existing grid-connected agricultural pumps"
+        }
+    },
+    "eligibility": {
+        "title": "Eligibility Criteria",
+        "subtitle": "Check if you qualify for the Kusum Yojana subsidy",
+        "criteria": {
+            "farmer": {
+                "title": "Must be a Farmer",
+                "description": "Applicant should be engaged in agricultural activities"
+            },
+            "aadhar": {
+                "title": "Aadhar Card Required",
+                "description": "Valid Aadhar card is mandatory for identification"
+            },
+            "bank": {
+                "title": "Active Bank Account",
+                "description": "Bank account in applicant's name for subsidy transfer"
+            },
+            "land": {
+                "title": "Land Ownership Proof",
+                "description": "7/12 extract or equivalent land ownership document"
+            }
+        },
+        "documents": {
+            "title": "Required Documents",
+            "list": [
+                "Aadhar Card (Photo copy)",
+                "Land ownership document (7/12 extract)",
+                "Bank passbook first page",
+                "Passport size photograph",
+                "Mobile number linked with Aadhar"
+            ]
+        }
+    },
+    "apply": {
+        "title": "Apply for Solar Pump Subsidy",
+        "subtitle": "Fill the form below to register your application",
+        "form": {
+            "fullName": "Full Name",
+            "fullNamePlaceholder": "Enter your full name",
+            "fatherName": "Father's Name",
+            "fatherNamePlaceholder": "Enter father's name",
+            "village": "Village/Town",
+            "villagePlaceholder": "Enter your village or town name",
+            "district": "District",
+            "districtPlaceholder": "Enter your district",
+            "state": "State",
+            "statePlaceholder": "Select your state",
+            "mobile": "Mobile Number",
+            "mobilePlaceholder": "10-digit mobile number",
+            "aadhar": "Aadhar Number",
+            "aadharPlaceholder": "12-digit Aadhar number",
+            "aadharPhoto": "Upload Aadhar Card",
+            "landDocument": "Upload Land Document (7/12)",
+            "bankPassbook": "Upload Bank Passbook",
+            "submit": "Submit Application",
+            "submitting": "Submitting..."
+        },
+        "validation": {
+            "required": "This field is required",
+            "mobileInvalid": "Please enter a valid 10-digit mobile number",
+            "aadharInvalid": "Please enter a valid 12-digit Aadhar number"
+        },
+        "success": {
+            "title": "Application Submitted Successfully!",
+            "message": "Your application has been received. Our team will contact you soon.",
+            "applicationId": "Application ID"
+        }
+    },
+    "contact": {
+        "title": "Contact Us",
+        "subtitle": "Get in touch with our support team",
+        "address": {
+            "title": "Address",
+            "content": "4/625, Maujpur, Near Hanuman Mandir, Seelampur, Delhi- 110098"
+        },
+        "phone": {
+            "title": "Phone",
+            "content": "+91 7365821070"
+        },
+        "email": {
+            "title": "Email",
+            "content": "info@submersiblepumpyojana.com"
+        },
+        "hours": {
+            "title": "Office Hours",
+            "content": "Monday - Saturday: 10:00 AM - 6:00 PM"
+        }
+    },
+    "footer": {
+        "description": "Submersible Pump Yojana portal helps farmers access solar pump subsidies under PM Kusum Yojana.",
+        "quickLinks": "Quick Links",
+        "contactInfo": "Contact Info",
+        "disclaimer": "Disclaimer: This portal is for information and application assistance. For official information, please visit the government website.",
+        "copyright": "© 2025 Submersible Pump Yojana. All rights reserved."
+    },
+    "states": [
+        "Andhra Pradesh",
+        "Arunachal Pradesh",
+        "Assam",
+        "Bihar",
+        "Chhattisgarh",
+        "Goa",
+        "Gujarat",
+        "Haryana",
+        "Himachal Pradesh",
+        "Jharkhand",
+        "Karnataka",
+        "Kerala",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Manipur",
+        "Meghalaya",
+        "Mizoram",
+        "Nagaland",
+        "Odisha",
+        "Punjab",
+        "Rajasthan",
+        "Sikkim",
+        "Tamil Nadu",
+        "Telangana",
+        "Tripura",
+        "Uttar Pradesh",
+        "Uttarakhand",
+        "West Bengal",
+        "Delhi",
+        "Jammu and Kashmir",
+        "Ladakh"
+    ]
+}
