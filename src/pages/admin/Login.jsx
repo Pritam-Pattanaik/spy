@@ -67,7 +67,7 @@ function AdminLogin() {
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     placeholder="admin@example.com"
-                                    className="form-input pl-11"
+                                    className="form-input-icon"
                                     required
                                 />
                             </div>
@@ -82,7 +82,7 @@ function AdminLogin() {
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                     placeholder="••••••••"
-                                    className="form-input pl-11"
+                                    className="form-input-icon"
                                     required
                                 />
                             </div>

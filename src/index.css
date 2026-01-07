@@ -73,6 +73,22 @@ body {
   @apply shadow-md;
 }
 
+/* Form input with icon on left */
+.form-input-icon {
+  @apply w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-govt-navy focus:border-transparent outline-none transition-all duration-200;
+}
+
+.form-input-icon:focus {
+  @apply shadow-md;
+}
+
+/* Fix autofill styling */
+.form-input:-webkit-autofill,
+.form-input-icon:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #374151 !important;
+}
+
 .form-label {
   @apply block text-sm font-semibold text-gray-700 mb-2;
 }
@@ -148,7 +164,7 @@ body {
   .marquee-text {
     animation-duration: 15s;
   }
-  
+
   .section-title {
     @apply text-2xl;
   }
