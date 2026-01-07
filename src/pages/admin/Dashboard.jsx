@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
     Sun, LogOut, Users, Clock, CheckCircle, XCircle,
-    Search, Filter, RefreshCw, Eye, ChevronDown
+    Search, Filter, RefreshCw, Eye, ChevronDown, Zap
 } from 'lucide-react'
 
 function AdminDashboard() {
     const navigate = useNavigate()
+    const [activeTab, setActiveTab] = useState('kusum') // 'kusum' or 'pump'
     const [applications, setApplications] = useState([])
+    const [pumpApplications, setPumpApplications] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState('ALL')
@@ -22,18 +24,22 @@ function AdminDashboard() {
     }
 
     useEffect(() => {
-        fetchApplications()
+        fetchAllApplications()
     }, [])
 
-    const fetchApplications = async () => {
+    const fetchAllApplications = async () => {
+        setIsLoading(true)
         try {
             const token = localStorage.getItem('spy-admin-token')
-            const response = await fetch('/api/applications', {
-                headers: { Authorization: `Bearer ${token}` },
-            })
+            const headers = { Authorization: `Bearer ${token}` }
 
-            if (!response.ok) {
-                if (response.status === 401) {
+            const [kusumRes, pumpRes] = await Promise.all([
+                fetch('/api/applications', { headers }),
+                fetch('/api/pump-applications', { headers })
+            ])
+
+            if (!kusumRes.ok || !pumpRes.ok) {
+                if (kusumRes.status === 401 || pumpRes.status === 401) {
                     localStorage.removeItem('spy-admin-token')
                     navigate('/admin/login')
                     return
@@ -41,8 +47,13 @@ function AdminDashboard() {
                 throw new Error('Failed to fetch')
             }
 
-            const data = await response.json()
-            setApplications(data)
+            const [kusumData, pumpData] = await Promise.all([
+                kusumRes.json(),
+                pumpRes.json()
+            ])
+
+            setApplications(kusumData)
+            setPumpApplications(pumpData)
         } catch (error) {
             console.error('Fetch error:', error)
         } finally {
@@ -54,7 +65,11 @@ function AdminDashboard() {
         setIsUpdating(true)
         try {
             const token = localStorage.getItem('spy-admin-token')
-            const response = await fetch(`/api/applications/${id}/status`, {
+            const endpoint = activeTab === 'kusum'
+                ? `/api/applications/${id}/status`
+                : `/api/pump-applications/${id}/status`
+
+            const response = await fetch(endpoint, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -64,9 +79,15 @@ function AdminDashboard() {
             })
 
             if (response.ok) {
-                setApplications(prev =>
-                    prev.map(app => app.id === id ? { ...app, status } : app)
-                )
+                if (activeTab === 'kusum') {
+                    setApplications(prev =>
+                        prev.map(app => app.id === id ? { ...app, status } : app)
+                    )
+                } else {
+                    setPumpApplications(prev =>
+                        prev.map(app => app.id === id ? { ...app, status } : app)
+                    )
+                }
                 setSelectedApp(null)
             }
         } catch (error) {
@@ -82,23 +103,34 @@ function AdminDashboard() {
         navigate('/admin/login')
     }
 
-    const filteredApplications = applications.filter(app => {
-        const matchesSearch =
-            app.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            app.mobile.includes(searchTerm) ||
-            app.district.toLowerCase().includes(searchTerm.toLowerCase())
+    const currentData = activeTab === 'kusum' ? applications : pumpApplications
 
+    const filteredApplications = currentData.filter(app => {
+        const searchFields = activeTab === 'kusum'
+            ? `${app.fullName} ${app.mobile} ${app.district}`.toLowerCase()
+            : `${app.name} ${app.phone} ${app.city}`.toLowerCase()
+
+        const matchesSearch = searchFields.includes(searchTerm.toLowerCase())
         const matchesStatus = statusFilter === 'ALL' || app.status === statusFilter
 
         return matchesSearch && matchesStatus
     })
 
-    const stats = {
+    const kusumStats = {
         total: applications.length,
         pending: applications.filter(a => a.status === 'PENDING').length,
         approved: applications.filter(a => a.status === 'APPROVED').length,
         rejected: applications.filter(a => a.status === 'REJECTED').length,
     }
+
+    const pumpStats = {
+        total: pumpApplications.length,
+        pending: pumpApplications.filter(a => a.status === 'PENDING').length,
+        approved: pumpApplications.filter(a => a.status === 'APPROVED').length,
+        rejected: pumpApplications.filter(a => a.status === 'REJECTED').length,
+    }
+
+    const stats = activeTab === 'kusum' ? kusumStats : pumpStats
 
     const formatDate = (date) => {
         return new Date(date).toLocaleDateString('en-IN', {
@@ -135,6 +167,30 @@ function AdminDashboard() {
             </header>
 
             <main className="container mx-auto px-4 py-8">
+                {/* Tabs */}
+                <div className="flex gap-2 mb-6">
+                    <button
+                        onClick={() => setActiveTab('kusum')}
+                        className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${activeTab === 'kusum'
+                                ? 'bg-govt-navy text-white shadow-lg'
+                                : 'bg-white text-gray-600 hover:bg-gray-50'
+                            }`}
+                    >
+                        <Sun className="w-5 h-5" />
+                        Kusum Yojana ({applications.length})
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('pump')}
+                        className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${activeTab === 'pump'
+                                ? 'bg-govt-green text-white shadow-lg'
+                                : 'bg-white text-gray-600 hover:bg-gray-50'
+                            }`}
+                    >
+                        <Zap className="w-5 h-5" />
+                        Solar Pump ({pumpApplications.length})
+                    </button>
+                </div>
+
                 {/* Stats Cards */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                     <div className="bg-white rounded-xl shadow-sm p-6">
@@ -190,7 +246,7 @@ function AdminDashboard() {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                                 type="text"
-                                placeholder="Search by name, mobile, or district..."
+                                placeholder={activeTab === 'kusum' ? "Search by name, mobile, or district..." : "Search by name, phone, or city..."}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-govt-navy focus:border-transparent"
@@ -213,7 +269,7 @@ function AdminDashboard() {
                                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                             </div>
                             <button
-                                onClick={fetchApplications}
+                                onClick={fetchAllApplications}
                                 className="flex items-center gap-2 px-4 py-2 bg-govt-navy text-white rounded-lg hover:bg-blue-900 transition-colors"
                             >
                                 <RefreshCw className="w-4 h-4" />
@@ -241,8 +297,9 @@ function AdminDashboard() {
                                 <thead>
                                     <tr>
                                         <th>Applicant</th>
-                                        <th>Location</th>
-                                        <th>Mobile</th>
+                                        <th>{activeTab === 'kusum' ? 'Location' : 'Address'}</th>
+                                        <th>{activeTab === 'kusum' ? 'Mobile' : 'Phone'}</th>
+                                        {activeTab === 'pump' && <th>Pump Power</th>}
                                         <th>Date</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -253,17 +310,30 @@ function AdminDashboard() {
                                         <tr key={app.id}>
                                             <td>
                                                 <div>
-                                                    <p className="font-semibold text-govt-blue">{app.fullName}</p>
-                                                    <p className="text-xs text-gray-500">S/o {app.fatherName}</p>
+                                                    <p className="font-semibold text-govt-blue">
+                                                        {activeTab === 'kusum' ? app.fullName : app.name}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500">
+                                                        {activeTab === 'kusum' ? `S/o ${app.fatherName}` : app.email}
+                                                    </p>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div>
-                                                    <p>{app.village}</p>
-                                                    <p className="text-xs text-gray-500">{app.district}, {app.state}</p>
+                                                    <p>{activeTab === 'kusum' ? app.village : app.address}</p>
+                                                    <p className="text-xs text-gray-500">
+                                                        {activeTab === 'kusum' ? `${app.district}, ${app.state}` : `${app.city} - ${app.pin}`}
+                                                    </p>
                                                 </div>
                                             </td>
-                                            <td>{app.mobile}</td>
+                                            <td>{activeTab === 'kusum' ? app.mobile : app.phone}</td>
+                                            {activeTab === 'pump' && (
+                                                <td>
+                                                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-medium">
+                                                        {app.pumpPower}
+                                                    </span>
+                                                </td>
+                                            )}
                                             <td>{formatDate(app.createdAt)}</td>
                                             <td>
                                                 <span className={`badge ${statusColors[app.status]}`}>
@@ -292,46 +362,85 @@ function AdminDashboard() {
             {selectedApp && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                        <div className="p-6 border-b">
-                            <h2 className="text-xl font-bold text-govt-blue">Application Details</h2>
+                        <div className={`p-6 border-b ${activeTab === 'pump' ? 'bg-green-50' : 'bg-blue-50'}`}>
+                            <h2 className="text-xl font-bold text-govt-blue">
+                                {activeTab === 'kusum' ? 'Kusum Yojana Application' : 'Solar Pump Application'}
+                            </h2>
                             <p className="text-gray-500 text-sm">ID: {selectedApp.id}</p>
                         </div>
 
                         <div className="p-6 space-y-4">
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="text-sm text-gray-500">Full Name</label>
-                                    <p className="font-semibold">{selectedApp.fullName}</p>
+                            {activeTab === 'kusum' ? (
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-sm text-gray-500">Full Name</label>
+                                        <p className="font-semibold">{selectedApp.fullName}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">Father's Name</label>
+                                        <p className="font-semibold">{selectedApp.fatherName}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">Village</label>
+                                        <p className="font-semibold">{selectedApp.village}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">District</label>
+                                        <p className="font-semibold">{selectedApp.district}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">State</label>
+                                        <p className="font-semibold">{selectedApp.state}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">Mobile</label>
+                                        <p className="font-semibold">{selectedApp.mobile}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">Aadhar Number</label>
+                                        <p className="font-semibold">{selectedApp.aadharNumber}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">Applied On</label>
+                                        <p className="font-semibold">{formatDate(selectedApp.createdAt)}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="text-sm text-gray-500">Father's Name</label>
-                                    <p className="font-semibold">{selectedApp.fatherName}</p>
+                            ) : (
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-sm text-gray-500">Name</label>
+                                        <p className="font-semibold">{selectedApp.name}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">Email</label>
+                                        <p className="font-semibold">{selectedApp.email}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">Phone</label>
+                                        <p className="font-semibold">{selectedApp.phone}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">Address</label>
+                                        <p className="font-semibold">{selectedApp.address}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">City</label>
+                                        <p className="font-semibold">{selectedApp.city}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">PIN Code</label>
+                                        <p className="font-semibold">{selectedApp.pin}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">Pump Power</label>
+                                        <p className="font-semibold text-blue-600">{selectedApp.pumpPower}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-gray-500">Applied On</label>
+                                        <p className="font-semibold">{formatDate(selectedApp.createdAt)}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="text-sm text-gray-500">Village</label>
-                                    <p className="font-semibold">{selectedApp.village}</p>
-                                </div>
-                                <div>
-                                    <label className="text-sm text-gray-500">District</label>
-                                    <p className="font-semibold">{selectedApp.district}</p>
-                                </div>
-                                <div>
-                                    <label className="text-sm text-gray-500">State</label>
-                                    <p className="font-semibold">{selectedApp.state}</p>
-                                </div>
-                                <div>
-                                    <label className="text-sm text-gray-500">Mobile</label>
-                                    <p className="font-semibold">{selectedApp.mobile}</p>
-                                </div>
-                                <div>
-                                    <label className="text-sm text-gray-500">Aadhar Number</label>
-                                    <p className="font-semibold">{selectedApp.aadharNumber}</p>
-                                </div>
-                                <div>
-                                    <label className="text-sm text-gray-500">Applied On</label>
-                                    <p className="font-semibold">{formatDate(selectedApp.createdAt)}</p>
-                                </div>
-                            </div>
+                            )}
 
                             <div className="pt-4 border-t">
                                 <label className="text-sm text-gray-500 block mb-2">Update Status</label>
@@ -342,7 +451,7 @@ function AdminDashboard() {
                                             onClick={() => updateStatus(selectedApp.id, status)}
                                             disabled={isUpdating || selectedApp.status === status}
                                             className={`px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 ${selectedApp.status === status
-                                                    ? 'bg-govt-navy text-white'
+                                                    ? activeTab === 'pump' ? 'bg-govt-green text-white' : 'bg-govt-navy text-white'
                                                     : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                                                 }`}
                                         >

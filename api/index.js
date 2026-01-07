@@ -167,6 +167,85 @@ app.patch('/api/applications/:id/status', authenticateToken, async (req, res) =>
     }
 })
 
+// ============== PUMP APPLICATION ROUTES ==============
+
+// Submit new pump application (public)
+app.post('/api/pump-applications', async (req, res) => {
+    try {
+        const { name, email, phone, address, city, pin, pumpPower } = req.body
+
+        // Validation
+        if (!name || !email || !phone || !address || !city || !pin || !pumpPower) {
+            return res.status(400).json({ error: 'All fields are required' })
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({ error: 'Invalid email format' })
+        }
+
+        if (!/^\d{10}$/.test(phone)) {
+            return res.status(400).json({ error: 'Invalid phone number format' })
+        }
+
+        if (!/^\d{6}$/.test(pin)) {
+            return res.status(400).json({ error: 'Invalid PIN code format' })
+        }
+
+        const application = await prisma.pumpApplication.create({
+            data: {
+                name,
+                email,
+                phone,
+                address,
+                city,
+                pin,
+                pumpPower,
+                status: 'PENDING',
+            },
+        })
+
+        res.status(201).json({ id: application.id, message: 'Pump application submitted successfully' })
+    } catch (error) {
+        console.error('Pump application submission error:', error)
+        res.status(500).json({ error: 'Failed to submit pump application' })
+    }
+})
+
+// Get all pump applications (admin only)
+app.get('/api/pump-applications', authenticateToken, async (req, res) => {
+    try {
+        const applications = await prisma.pumpApplication.findMany({
+            orderBy: { createdAt: 'desc' },
+        })
+        res.json(applications)
+    } catch (error) {
+        console.error('Fetch pump applications error:', error)
+        res.status(500).json({ error: 'Failed to fetch pump applications' })
+    }
+})
+
+// Update pump application status (admin only)
+app.patch('/api/pump-applications/:id/status', authenticateToken, async (req, res) => {
+    try {
+        const { status } = req.body
+        const validStatuses = ['PENDING', 'REVIEWED', 'APPROVED', 'REJECTED']
+
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ error: 'Invalid status' })
+        }
+
+        const application = await prisma.pumpApplication.update({
+            where: { id: req.params.id },
+            data: { status },
+        })
+
+        res.json(application)
+    } catch (error) {
+        console.error('Update pump application status error:', error)
+        res.status(500).json({ error: 'Failed to update status' })
+    }
+})
+
 // ============== HEALTH CHECK ==============
 
 app.get('/api/health', (req, res) => {

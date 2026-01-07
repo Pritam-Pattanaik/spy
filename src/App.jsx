@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import About from './pages/About'
 import Eligibility from './pages/Eligibility'
 import Apply from './pages/Apply'
+import ApplyPump from './pages/ApplyPump'
 import Contact from './pages/Contact'
 import AdminLogin from './pages/admin/Login'
 import AdminDashboard from './pages/admin/Dashboard'
@@ -37,6 +38,7 @@ function App() {
                                 <Route path="/about" element={<About />} />
                                 <Route path="/eligibility" element={<Eligibility />} />
                                 <Route path="/apply" element={<Apply />} />
+                                <Route path="/apply-pump" element={<ApplyPump />} />
                                 <Route path="/contact" element={<Contact />} />
                             </Routes>
                         </main>
