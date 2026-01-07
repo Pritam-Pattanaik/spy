@@ -103,9 +103,6 @@ function Footer() {
                     <p className="text-center text-gray-500 text-xs">
                         {t('footer.copyright')}
                     </p>
-                    <p className="text-center text-gray-500 text-xs mt-2">
-                        Built with ✨ <span className="text-saffron-400">Antigravity AI</span>
-                    </p>
                 </div>
             </div>
         </footer>
