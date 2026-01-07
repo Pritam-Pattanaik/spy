@@ -246,6 +246,90 @@ app.patch('/api/pump-applications/:id/status', authenticateToken, async (req, re
     }
 })
 
+// ============== SETTINGS ROUTES ==============
+
+// Update password (admin only)
+app.put('/api/settings/password', authenticateToken, async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ error: 'Current password and new password are required' })
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({ error: 'New password must be at least 6 characters' })
+        }
+
+        const user = await prisma.user.findUnique({ where: { id: req.user.id } })
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' })
+        }
+
+        const validPassword = await bcrypt.compare(currentPassword, user.password_hash)
+
+        if (!validPassword) {
+            return res.status(401).json({ error: 'Current password is incorrect' })
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10)
+
+        await prisma.user.update({
+            where: { id: req.user.id },
+            data: { password_hash: hashedPassword },
+        })
+
+        res.json({ message: 'Password updated successfully' })
+    } catch (error) {
+        console.error('Update password error:', error)
+        res.status(500).json({ error: 'Failed to update password' })
+    }
+})
+
+// Update email (admin only)
+app.put('/api/settings/email', authenticateToken, async (req, res) => {
+    try {
+        const { password, newEmail } = req.body
+
+        if (!password || !newEmail) {
+            return res.status(400).json({ error: 'Password and new email are required' })
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+            return res.status(400).json({ error: 'Invalid email format' })
+        }
+
+        const user = await prisma.user.findUnique({ where: { id: req.user.id } })
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' })
+        }
+
+        const validPassword = await bcrypt.compare(password, user.password_hash)
+
+        if (!validPassword) {
+            return res.status(401).json({ error: 'Password is incorrect' })
+        }
+
+        // Check if email already exists
+        const existingUser = await prisma.user.findUnique({ where: { email: newEmail } })
+        if (existingUser && existingUser.id !== req.user.id) {
+            return res.status(400).json({ error: 'Email already in use' })
+        }
+
+        await prisma.user.update({
+            where: { id: req.user.id },
+            data: { email: newEmail },
+        })
+
+        res.json({ message: 'Email updated successfully' })
+    } catch (error) {
+        console.error('Update email error:', error)
+        res.status(500).json({ error: 'Failed to update email' })
+    }
+})
+
 // ============== HEALTH CHECK ==============
 
 app.get('/api/health', (req, res) => {

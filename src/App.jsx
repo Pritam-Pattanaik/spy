@@ -10,6 +10,7 @@ import ApplyPump from './pages/ApplyPump'
 import Contact from './pages/Contact'
 import AdminLogin from './pages/admin/Login'
 import AdminDashboard from './pages/admin/Dashboard'
+import AdminSettings from './pages/admin/Settings'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -23,6 +24,14 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <AdminDashboard />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/admin/settings"
+                    element={
+                        <ProtectedRoute>
+                            <AdminSettings />
                         </ProtectedRoute>
                     }
                 />

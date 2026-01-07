@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
     Sun, LogOut, Users, Clock, CheckCircle, XCircle,
-    Search, Filter, RefreshCw, Eye, ChevronDown, Zap
+    Search, Filter, RefreshCw, Eye, ChevronDown, Zap, Settings
 } from 'lucide-react'
 
 function AdminDashboard() {
@@ -155,13 +155,22 @@ function AdminDashboard() {
                                 <p className="text-xs text-blue-200">Submersible Pump Yojana</p>
                             </div>
                         </div>
-                        <button
-                            onClick={handleLogout}
-                            className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
-                        >
-                            <LogOut className="w-4 h-4" />
-                            <span className="hidden sm:inline">Logout</span>
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => navigate('/admin/settings')}
+                                className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                            >
+                                <Settings className="w-4 h-4" />
+                                <span className="hidden sm:inline">Settings</span>
+                            </button>
+                            <button
+                                onClick={handleLogout}
+                                className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                            >
+                                <LogOut className="w-4 h-4" />
+                                <span className="hidden sm:inline">Logout</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -172,8 +181,8 @@ function AdminDashboard() {
                     <button
                         onClick={() => setActiveTab('kusum')}
                         className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${activeTab === 'kusum'
-                                ? 'bg-govt-navy text-white shadow-lg'
-                                : 'bg-white text-gray-600 hover:bg-gray-50'
+                            ? 'bg-govt-navy text-white shadow-lg'
+                            : 'bg-white text-gray-600 hover:bg-gray-50'
                             }`}
                     >
                         <Sun className="w-5 h-5" />
@@ -182,8 +191,8 @@ function AdminDashboard() {
                     <button
                         onClick={() => setActiveTab('pump')}
                         className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${activeTab === 'pump'
-                                ? 'bg-govt-green text-white shadow-lg'
-                                : 'bg-white text-gray-600 hover:bg-gray-50'
+                            ? 'bg-govt-green text-white shadow-lg'
+                            : 'bg-white text-gray-600 hover:bg-gray-50'
                             }`}
                     >
                         <Zap className="w-5 h-5" />
@@ -451,8 +460,8 @@ function AdminDashboard() {
                                             onClick={() => updateStatus(selectedApp.id, status)}
                                             disabled={isUpdating || selectedApp.status === status}
                                             className={`px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 ${selectedApp.status === status
-                                                    ? activeTab === 'pump' ? 'bg-govt-green text-white' : 'bg-govt-navy text-white'
-                                                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                                                ? activeTab === 'pump' ? 'bg-govt-green text-white' : 'bg-govt-navy text-white'
+                                                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                                                 }`}
                                         >
                                             {status}
