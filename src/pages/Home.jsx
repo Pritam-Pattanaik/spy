@@ -72,7 +72,7 @@ function Home() {
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <Link
-                                to="/apply"
+                                to="/apply-pump"
                                 className="btn-saffron flex items-center gap-2 text-lg"
                             >
                                 {t('hero.cta')}
@@ -147,7 +147,7 @@ function Home() {
                         {t('highlights.subsidy.description')}
                     </p>
                     <Link
-                        to="/apply"
+                        to="/apply-pump"
                         className="inline-flex items-center gap-2 bg-white text-govt-green px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors"
                     >
                         {t('hero.cta')}
